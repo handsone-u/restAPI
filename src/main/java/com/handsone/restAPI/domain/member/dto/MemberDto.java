@@ -20,6 +20,6 @@ public class MemberDto {
     public void erasePassword() { this.password = ""; }
 
     public static MemberDto toMemberDto(Member member) {
-        return new MemberDto(member.getId(), member.getUserId(), member.getPassword(), member.getNickName(), member.getAddress());
+        return new MemberDto(member.getId(), member.getUserId(), "hide", member.getNickName(), member.getAddress());
     }
 }
