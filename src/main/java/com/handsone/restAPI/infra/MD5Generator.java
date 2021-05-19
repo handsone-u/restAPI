@@ -1,4 +1,4 @@
-package com.handsone.restAPI.domain;
+package com.handsone.restAPI.infra;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;

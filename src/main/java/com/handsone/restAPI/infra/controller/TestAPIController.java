@@ -76,8 +76,8 @@ public class TestAPIController {
     }
 
     @PostMapping("test/2")
-    public Slice<DogDto> gets2(@RequestBody com.handsone.restAPI.global.request.PageRequest pageRequest) {
+    public Slice<DogLost> gets2(@RequestBody com.handsone.restAPI.global.request.PageRequest pageRequest) {
         System.out.println("pageRequest = " + pageRequest);
-        return dogLostService.findAllByBoardStatusNormal(pageRequest.of()).map(o->DogDto.toDogDto(o));
+        return dogLostService.findAllByBoardStatusNormal(pageRequest.of());
     }
 }

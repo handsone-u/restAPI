@@ -1,5 +1,6 @@
 package com.handsone.restAPI.domain.dogFound.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.handsone.restAPI.domain.BoardStatus;
 import com.handsone.restAPI.domain.Dog;
 import com.handsone.restAPI.domain.Gender;
@@ -30,6 +31,7 @@ public class DogFound extends Dog {
     private Member member;
 
     @OneToMany(mappedBy = "dogFound")
+    @JsonIgnore
     private List<File> fileList = new ArrayList<>();
 
     public void changeBoardStatus(BoardStatus boardStatus) {

@@ -1,6 +1,5 @@
 package com.handsone.restAPI.domain.file.domain;
 
-import com.handsone.restAPI.domain.MD5Generator;
 import com.handsone.restAPI.domain.dogFound.domain.DogFound;
 import com.handsone.restAPI.domain.dogLost.domain.DogLost;
 import lombok.Getter;
@@ -8,8 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 @Entity @Getter
 @NoArgsConstructor
@@ -47,17 +45,18 @@ public class File {
         this.dogFound = dogFound;
     }
 
-    public void setNames(MultipartFile multiFile) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public void setNames(MultipartFile multiFile) {
         this.origFileName = multiFile.getOriginalFilename();
-        this.fileName = new MD5Generator(origFileName).toString();
+        UUID uuid = UUID.randomUUID();
+        this.fileName = uuid.toString() + "_" + this.origFileName;
     }
 
-    public static File createFile(DogLost dogLost, MultipartFile multiFile) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public static File createFile(DogLost dogLost, MultipartFile multiFile) {
         File file = new File(dogLost);
         file.setNames(multiFile);
         return file;
     }
-    public static File createFile(DogFound dogFound, MultipartFile multiFile) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public static File createFile(DogFound dogFound, MultipartFile multiFile) {
         File file = new File(dogFound);
         file.setNames(multiFile);
         return file;

@@ -111,6 +111,5 @@ class DogLostRepositoryTest {
         next = next.next();
         all1 = dogLostRepository.findAllByBoardStatus(BoardStatus.NORMAL, next);
         assertThat(all1.hasContent()).isFalse();
-
     }
 }

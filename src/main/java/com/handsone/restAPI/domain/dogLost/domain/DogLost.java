@@ -1,5 +1,6 @@
 package com.handsone.restAPI.domain.dogLost.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.handsone.restAPI.domain.BoardStatus;
 import com.handsone.restAPI.domain.Dog;
 import com.handsone.restAPI.global.request.DogDto;
@@ -34,6 +35,7 @@ public class DogLost extends Dog {
     private Member member;
 
     @OneToMany(mappedBy = "dogLost")
+    @JsonIgnore
     private List<File> fileList = new ArrayList<>();
 
     public void changeTitle(String title) {
@@ -51,6 +53,9 @@ public class DogLost extends Dog {
     public void setMember(Member member) {
         this.member = member;
     }
+    public void addFile(File file) {
+        fileList.add(file);
+    }
 
     public DogLost(DogDto dogDto) {
         super(dogDto);
@@ -62,6 +67,7 @@ public class DogLost extends Dog {
         DogLost dogLost = new DogLost(dogDto);
         dogLost.setBoardStatus(BoardStatus.NORMAL);
         dogLost.setMember(member);
+        member.addDogLost(dogLost);
         return dogLost;
     }
 }

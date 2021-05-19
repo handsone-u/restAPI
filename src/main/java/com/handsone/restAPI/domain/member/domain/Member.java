@@ -38,10 +38,15 @@ public class Member {
         this.password = password;
         return this;
     }
-
     public Member changeNickName(String nickName) {
         this.nickName = nickName;
         return this;
+    }
+    public void addDogLost(DogLost dogLost) {
+        dogLostList.add(dogLost);
+    }
+    public void addDogFound(DogFound dogFound) {
+        dogFoundList.add(dogFound);
     }
 
     public Member(String userId, String password, String nickName, Address address) {

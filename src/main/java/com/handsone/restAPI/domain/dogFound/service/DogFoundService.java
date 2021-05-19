@@ -4,6 +4,8 @@ import com.handsone.restAPI.domain.BoardStatus;
 import com.handsone.restAPI.domain.dogFound.domain.DogFound;
 import com.handsone.restAPI.domain.dogFound.repository.DogFoundRepository;
 import com.handsone.restAPI.domain.dogLost.domain.DogLost;
+import com.handsone.restAPI.domain.file.domain.File;
+import com.handsone.restAPI.domain.file.service.FileService;
 import com.handsone.restAPI.domain.member.domain.Member;
 import com.handsone.restAPI.domain.member.repository.MemberRepository;
 import com.handsone.restAPI.global.request.DogDto;
@@ -12,12 +14,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import static com.handsone.restAPI.domain.dogFound.domain.DogFound.createDogFound;
 import static com.handsone.restAPI.domain.dogLost.domain.DogLost.createDogLost;
+import static com.handsone.restAPI.domain.file.domain.File.createFile;
 
 @Service
 @Transactional
@@ -26,11 +31,32 @@ public class DogFoundService {
 
     private final DogFoundRepository dogFoundRepository;
     private final MemberRepository memberRepository;
+    private final FileService fileService;
 
-    public DogFound upload(DogDto dogDto) {
+    public DogFound upload(DogDto dogDto, List<MultipartFile> files) throws IOException {
         Member member = memberRepository.findById(dogDto.getMemberId()).get();
         DogFound dogFound = createDogFound(member, dogDto);
-        return dogFoundRepository.save(dogFound);
+        dogFound = dogFoundRepository.save(dogFound);
+        for (MultipartFile multiFile : files) {
+            File file = createFile(dogFound, multiFile);
+            String savePath = System.getProperty("user.dir")+"/src/main/resources/image";
+            System.out.println("savePath = " + savePath);
+
+            if (!new java.io.File(savePath).exists()) {
+                try {
+                    new java.io.File(savePath).mkdir();
+                } catch (Exception e) {
+                    e.getStackTrace();
+                }
+            }
+
+            String filePath = savePath + "/" + file.getFileName();
+            multiFile.transferTo(new java.io.File(filePath));
+            file.setFilePath(filePath);
+
+            file = fileService.saveFile(file);
+        }
+        return dogFound;
     }
 
     @Transactional(readOnly = true)

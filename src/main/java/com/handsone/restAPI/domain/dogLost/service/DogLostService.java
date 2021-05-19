@@ -10,6 +10,7 @@ import com.handsone.restAPI.domain.member.domain.Member;
 import com.handsone.restAPI.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,13 +34,14 @@ public class DogLostService {
     private final MemberRepository memberRepository;
     private final FileService fileService;
 
-    public DogLost upload(DogDto dogDto, List<MultipartFile> files) throws IOException, NoSuchAlgorithmException {
+    public DogLost upload(DogDto dogDto, List<MultipartFile> files) throws IOException {
         Member member = memberRepository.findById(dogDto.getMemberId()).get();
         DogLost dogLost = createDogLost(member, dogDto);
         dogLost = dogLostRepository.save(dogLost);
         for (MultipartFile multiFile : files) {
             File file = createFile(dogLost, multiFile);
-            String savePath = System.getProperty("user.dir");
+            String savePath = System.getProperty("user.dir")+"/src/main/resources/image";
+            System.out.println("savePath = " + savePath);
 
             if (!new java.io.File(savePath).exists()) {
                 try {
@@ -49,18 +51,24 @@ public class DogLostService {
                 }
             }
 
-            String filePath = savePath + "\\" + file.getFileName();
+            String filePath = savePath + "/" + file.getFileName();
             multiFile.transferTo(new java.io.File(filePath));
             file.setFilePath(filePath);
 
             file = fileService.saveFile(file);
+            dogLost.addFile(file);
         }
         return dogLost;
     }
 
     @Transactional(readOnly = true)
-    public Slice<DogLost> findAllByBoardStatusNormal(PageRequest pageRequest) {
+    public Slice<DogLost> findAllByBoardStatusNormal(Pageable pageRequest) {
         return dogLostRepository.findAllByBoardStatus(BoardStatus.NORMAL, pageRequest);
+    }
+
+    @Transactional(readOnly = true)
+    public Long count(){
+        return dogLostRepository.count();
     }
 
     @Transactional(readOnly = true)
