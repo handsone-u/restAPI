@@ -1,15 +1,13 @@
 package com.handsone.restAPI.global.request;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.handsone.restAPI.domain.BoardStatus;
 import com.handsone.restAPI.domain.Gender;
-import com.handsone.restAPI.domain.dogFound.domain.DogFound;
-import com.handsone.restAPI.domain.dogLost.domain.DogLost;
+import com.handsone.restAPI.domain.DogFound;
+import com.handsone.restAPI.domain.DogLost;
 import com.handsone.restAPI.infra.address.Address;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

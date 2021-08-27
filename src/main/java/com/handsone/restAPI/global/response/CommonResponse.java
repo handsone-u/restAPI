@@ -5,8 +5,7 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Getter @Setter
 public class CommonResponse<T> extends Response {
     private int count;
     private T data;

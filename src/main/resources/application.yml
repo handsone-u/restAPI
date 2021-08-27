@@ -9,6 +9,7 @@ spring:
     multipart:
       max-file-size: 15MB
       max-request-size: 10MB
+      enabled: true
 
   jpa:
     hibernate:
@@ -21,3 +22,6 @@ logging:
   level:
     org.hibernate.SQL: debug
 #  org.hibernate.type: trace
+
+file:
+  upload-dir: ./src/main/resources/image

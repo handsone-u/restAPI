@@ -10,12 +10,15 @@ import javax.persistence.Embeddable;
 @Embeddable @ToString @Getter @Setter
 @NoArgsConstructor
 public class Address {
-    private String si;
     private String gu;
     private String dong;
 
     public Address(String si, String gu, String dong) {
-        this.si = si;
+        this.gu = gu;
+        this.dong = dong;
+    }
+
+    public Address(String gu, String dong) {
         this.gu = gu;
         this.dong = dong;
     }

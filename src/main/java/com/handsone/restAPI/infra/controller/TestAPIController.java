@@ -2,15 +2,19 @@ package com.handsone.restAPI.infra.controller;
 
 import com.handsone.restAPI.global.request.DogDto;
 import com.handsone.restAPI.domain.Gender;
-import com.handsone.restAPI.domain.dogLost.domain.DogLost;
-import com.handsone.restAPI.domain.dogLost.service.DogLostService;
-import com.handsone.restAPI.domain.member.domain.Member;
-import com.handsone.restAPI.domain.member.dto.MemberDto;
-import com.handsone.restAPI.domain.member.service.MemberService;
+import com.handsone.restAPI.domain.DogLost;
+import com.handsone.restAPI.service.DogLostService;
+import com.handsone.restAPI.domain.Member;
+import com.handsone.restAPI.dto.MemberDto;
+import com.handsone.restAPI.service.MemberService;
 import com.handsone.restAPI.global.response.CommonResponse;
 import com.handsone.restAPI.global.response.Response;
+import com.handsone.restAPI.global.response.TestResponse;
 import com.handsone.restAPI.infra.address.Address;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -18,15 +22,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.handsone.restAPI.domain.member.dto.MemberDto.toMemberDto;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import static com.handsone.restAPI.dto.MemberDto.toMemberDto;
+
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class TestAPIController {
 
     private final MemberService memberService;
     private final DogLostService dogLostService;
-
     @GetMapping("test/create")
     public String createDate() {
         Member member1 = new Member("hello", "1234", "myNick", new Address("si", "gu", "dong"));
@@ -71,7 +79,7 @@ public class TestAPIController {
         Pageable next = pageRequest.next();
         System.out.println("next = " + next);
         Slice<DogLost> all = dogLostService.findAllByBoardStatusNormal((PageRequest) next);
-        if(all.hasContent()) return "ok";
+        if (all.hasContent()) return "ok";
         else return "no";
     }
 
@@ -79,5 +87,74 @@ public class TestAPIController {
     public Slice<DogLost> gets2(@RequestBody com.handsone.restAPI.global.request.PageRequest pageRequest) {
         System.out.println("pageRequest = " + pageRequest);
         return dogLostService.findAllByBoardStatusNormal(pageRequest.of());
+    }
+
+    @GetMapping("test-raw")
+    public List<MemberDto> getMemberDtoRaw() {
+        List<Member> all = memberService.findAll();
+        return all.stream()
+                .map(MemberDto::toMemberDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("test-json")
+    public ResponseEntity<? extends Response> getMemberDto() {
+        List<Member> all = memberService.findAll();
+        List<MemberDto> dtos = all.stream().map(a -> toMemberDto(a)).collect(Collectors.toList());
+        TestResponse<List<MemberDto>> dtosResponse = new TestResponse<>(dtos);
+        dtosResponse.setSuccess(true);
+        dtosResponse.setMessage("test-json");
+        return ResponseEntity.ok(dtosResponse);
+    }
+
+    @PostMapping("test/jsons")
+    public String ttt(@RequestBody String m, @RequestBody String b) {
+        log.info(m);
+        log.info(b);
+        return "hello";
+    }
+
+    @PostMapping("test/login")
+    public LoggingResponse signTest(@RequestBody Logging a) {
+        log.info(a.toString());
+        return new LoggingResponse(1L);
+    }
+
+    @GetMapping("test/hogi")
+    public TestNow testing() {
+        log.info("testing()");
+        TestNow testNow = new TestNow();
+        testNow.setNow(10);
+        testNow.setCnt(100);
+        return testNow;
+    }
+
+    @GetMapping("test/look")
+    public ResponseEntity<? extends Response> look() {
+        MemberDto mem1 = new MemberDto(1L, "123", "124", "!23", null);
+        MemberDto mem2 = new MemberDto(2L, "123", "124", "!23", null);
+        ArrayList<MemberDto> dtos = new ArrayList<MemberDto>();
+        dtos.add(mem1);
+        dtos.add(mem2);
+        return ResponseEntity.ok().body(new CommonResponse<>(mem1));
+//        return ResponseEntity.ok().body(new CommonResponse<>(dtos));
+    }
+
+    @Data
+    static class TestNow {
+        String message = "hello world~!";
+        int now;
+        int cnt;
+    }
+
+    @Data
+    static class Logging {
+        String user_id;
+        String user_password;
+    }
+
+    @Data @AllArgsConstructor
+    static class LoggingResponse {
+        Long id;
     }
 }
