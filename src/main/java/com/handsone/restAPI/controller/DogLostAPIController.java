@@ -24,8 +24,9 @@ public class DogLostAPIController {
     private final DogLostService dogLostService;
 
     @PostMapping("dog-lost")
-    public ResponseEntity<?extends Response> postDogLost(@ModelAttribute DogDto dogDto,
-                               @RequestParam("files") List<MultipartFile> files) throws Exception{
+    public ResponseEntity<?extends Response> postDogLost(
+            @ModelAttribute DogDto dogDto,
+            @RequestParam("files") List<MultipartFile> files) throws Exception{
         DogLost upload = dogLostService.upload(dogDto, files);
         return ResponseEntity.ok().body(new CommonResponse<DogDto>(new DogDto(upload)));
     }

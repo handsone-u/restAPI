@@ -7,7 +7,7 @@ import lombok.*;
 @Setter @Getter @ToString
 @NoArgsConstructor @AllArgsConstructor
 public class MemberDto {
-    private Long memberId;
+    private Long id;
     private String userId;
     private String password;
     private String nickname;
@@ -19,7 +19,7 @@ public class MemberDto {
 
     public void erasePassword() { this.password = ""; }
 
-    public static MemberDto toMemberDto(Member member) {
-        return new MemberDto(member.getId(), member.getUserId(), "hide", member.getNickName(), member.getAddress());
+    public Member toEntity() {
+        return new Member(id, userId, password, nickname, address);
     }
 }

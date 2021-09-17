@@ -2,17 +2,14 @@ package com.handsone.restAPI.domain;
 
 import com.handsone.restAPI.dto.MemberDto;
 import com.handsone.restAPI.infra.address.Address;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString(of = {"id", "userId", "password","nickName", "address"})
 public class Member {
 
@@ -49,18 +46,18 @@ public class Member {
         dogFoundList.add(dogFound);
     }
 
-    public Member(String userId, String password, String nickName, Address address) {
+    public Member(Long id, String userId, String password, String nickName, Address address) {
+        this.id = id;
         this.userId = userId;
         this.password = password;
         this.nickName = nickName;
         this.address = address;
     }
 
-    public Member(MemberDto memberDto) {
-        id = memberDto.getMemberId();
-        userId = memberDto.getUserId();
-        password = memberDto.getPassword();
-        nickName = memberDto.getNickname();
-        address = memberDto.getAddress();
+    public Member(String userId, String password, String nickName, Address address) {
+        this.userId = userId;
+        this.password = password;
+        this.nickName = nickName;
+        this.address = address;
     }
 }
