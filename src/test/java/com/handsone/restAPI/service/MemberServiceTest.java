@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
@@ -20,6 +21,18 @@ class MemberServiceTest {
     @Autowired private MemberService memberService;
     @Autowired MemberRepository memberRepository;
     @Autowired private EntityManager em;
+
+    @Test @Transactional(readOnly = true)
+    public void jpaTest() {
+        Member member1 = em.find(Member.class, 1L);
+        Member member2 = em.find(Member.class, 1L);
+
+        System.out.println("member1 = " + member1);
+        System.out.println("member2 = " + member2);
+        assertThat(member1 == member2).isTrue();
+        assertThat(member1).isEqualTo(member2);
+        assertThat(member1).isSameAs(member2);
+    }
 
     @BeforeEach
     public void before() {
@@ -69,7 +82,7 @@ class MemberServiceTest {
         // when
         assertThatThrownBy(() -> memberService.signUp(already))
                 .isInstanceOf(ClientException.class)
-                .hasMessage("Member's userId already exists.");
+                .hasMessage("Member's userId already exists. ".concat(already.getUserId()));
         // then
         assertThat(memberRepository.findByUserId(already.getUserId())).isPresent();
         assertThat(memberService.count()).isEqualTo(3);

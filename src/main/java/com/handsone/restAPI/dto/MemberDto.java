@@ -1,5 +1,6 @@
 package com.handsone.restAPI.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.handsone.restAPI.domain.Member;
 import com.handsone.restAPI.infra.address.Address;
 import lombok.*;
@@ -9,17 +10,12 @@ import lombok.*;
 public class MemberDto {
     private Long id;
     private String userId;
+    @JsonIgnore
     private String password;
-    private String nickname;
+    private String nickName;
     private Address address;
 
-    public Member toMember() {
-        return new Member(this.userId, this.password, this.nickname, this.address);
-    }
-
-    public void erasePassword() { this.password = ""; }
-
     public Member toEntity() {
-        return new Member(id, userId, password, nickname, address);
+        return new Member(id, userId, password, nickName, address);
     }
 }

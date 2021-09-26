@@ -10,7 +10,6 @@ import java.util.List;
 
 @Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@ToString(of = {"id", "userId", "password","nickName", "address"})
 public class Member {
 
     @Id @GeneratedValue
@@ -29,15 +28,6 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<DogFound> dogFoundList = new ArrayList<>();
-
-    public Member changePassword(String password) {
-        this.password = password;
-        return this;
-    }
-    public Member changeNickName(String nickName) {
-        this.nickName = nickName;
-        return this;
-    }
 
     public void addDogLost(DogLost dogLost) {
         dogLostList.add(dogLost);
