@@ -7,6 +7,7 @@ spring:
 
   servlet:
     multipart:
+      file-size-threshold: 1MB
       max-file-size: 15MB
       max-request-size: 10MB
       enabled: true
@@ -18,12 +19,21 @@ spring:
       hibernate:
 #        show_sql: true
         format_sql: true
+        default_batch_fetch_size: 100
 logging:
   file:
     name: ./log/test.log
   level:
     sql: info
+    com:
+      handsone:
+        restAPI:
+          handler: debug
     root: info
+  logback:
+    rollingpolicy:
+      max-history: 30
+      max-file-size: 50MB
 #    org.hibernate.SQL: trace
 #  org.hibernate.type: trace
 
