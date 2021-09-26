@@ -9,20 +9,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import static com.handsone.restAPI.error.ErrorCode.DUPLICATE_RESOURCE;
-
 @Slf4j
 @RestControllerAdvice
 public class ExceptionAPIHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {ClientException.class})
-    protected ResponseEntity<? extends Response> duplicatedExceptionHandler() {
+    protected ResponseEntity<ErrorResponse> clientErrorHandle(ClientException e) {
+        log.debug(e.getErrorCode().getDetail());
 
-        return ResponseEntity
-                .status(DUPLICATE_RESOURCE.getHttpStatus())
-                .body(ErrorResponse.builder()
-                        .errorMessage(DUPLICATE_RESOURCE.getDetail())
-                        .errorCode(DUPLICATE_RESOURCE.getHttpStatus().toString())
-                        .build());
+        return ErrorResponse.toResponseEntity(e.getErrorCode());
     }
 }

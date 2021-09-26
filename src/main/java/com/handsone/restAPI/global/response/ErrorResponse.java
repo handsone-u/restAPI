@@ -1,22 +1,29 @@
 package com.handsone.restAPI.global.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.handsone.restAPI.error.ErrorCode;
+import lombok.*;
+import org.springframework.http.ResponseEntity;
+
+import java.time.LocalDateTime;
 
 @Getter @Setter
 @Builder
 public class ErrorResponse extends Response{
-    private String errorMessage;
-    private String errorCode;
+    private LocalDateTime localDateTime;
+    private int status;
+    private String error;
+    private String code;
+    private String message;
 
-    public ErrorResponse(String errorMessage) {
-        this.errorMessage = errorMessage;
-        this.errorCode = "404";
+    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode) {
+        return ResponseEntity.status(errorCode.getHttpStatus())
+                .body(ErrorResponse.builder()
+                        .localDateTime(LocalDateTime.now())
+                        .status(errorCode.getHttpStatus().value())
+                        .error(errorCode.getHttpStatus().name())
+                        .code(errorCode.name())
+                        .message(errorCode.getDetail())
+                        .build());
     }
 
-    public ErrorResponse(String errorMessage, String errorCode) {
-        this.errorMessage = errorMessage;
-        this.errorCode = errorCode;
-    }
 }
