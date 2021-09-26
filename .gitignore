@@ -25,6 +25,8 @@ log
 *.ipr
 *.img
 image
+lost
+found
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
