@@ -19,11 +19,11 @@ public class File {
     private String filePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doglost_id")
+    @JoinColumn(name = "dogLost_id")
     private DogLost dogLost;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dogfound_id")
+    @JoinColumn(name = "dogFound_id")
     private DogFound dogFound;
 
     public File(Long id, String origFileName, String fileName, String filePath) {
@@ -43,21 +43,21 @@ public class File {
         this.dogFound = dogFound;
     }
 
-    public void setFileNames(MultipartFile multiFile) {
+    public void setFileNames(MultipartFile multiFile, String fileName) {
         this.origFileName = multiFile.getOriginalFilename();
-        UUID uuid = UUID.randomUUID();
-        this.fileName = uuid.toString() + "_" + this.origFileName;
+        this.fileName = fileName + "." + origFileName.split("\\.")[1];
     }
 
-    public static File createFile(DogLost dogLost, MultipartFile multiFile) {
+    public static File createFile(DogLost dogLost, MultipartFile multiFile, String fileName) {
         File file = new File(dogLost);
-        file.setFileNames(multiFile);
+        file.setFileNames(multiFile, fileName);
         dogLost.getFileList().add(file);
         return file;
     }
-    public static File createFile(DogFound dogFound, MultipartFile multiFile) {
+
+    public static File createFile(DogFound dogFound, MultipartFile multiFile, String fileName) {
         File file = new File(dogFound);
-        file.setFileNames(multiFile);
+        file.setFileNames(multiFile, fileName);
         dogFound.getFileList().add(file);
         return file;
     }
