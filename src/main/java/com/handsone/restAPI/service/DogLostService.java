@@ -2,10 +2,11 @@ package com.handsone.restAPI.service;
 
 import com.handsone.restAPI.domain.BoardStatus;
 import com.handsone.restAPI.domain.File;
-import com.handsone.restAPI.global.request.DogDto;
+import com.handsone.restAPI.dto.DogDto;
 import com.handsone.restAPI.domain.DogLost;
 import com.handsone.restAPI.repository.DogLostRepository;
 import com.handsone.restAPI.domain.Member;
+import com.handsone.restAPI.repository.FileRepository;
 import com.handsone.restAPI.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,25 +37,8 @@ public class DogLostService {
         Member member = memberRepository.findById(dogDto.getMemberId()).get();
         DogLost dogLost = createDogLost(member, dogDto);
         dogLost = dogLostRepository.save(dogLost);
-        for (MultipartFile multiFile : files) {
-            File file = createFile(dogLost, multiFile);
-            String savePath = System.getProperty("user.dir")+"/src/main/resources/lost"+dogLost.getId();
+        fileService.lostUpload(dogLost, files);
 
-            if (!new java.io.File(savePath).exists()) {
-                try {
-                    new java.io.File(savePath).mkdir();
-                } catch (Exception e) {
-                    e.getStackTrace();
-                }
-            }
-
-            String filePath = savePath + "/" + file.getFileName();
-            multiFile.transferTo(new java.io.File(filePath));
-            file.setFilePath(filePath);
-
-            file = fileService.saveFile(file);
-            dogLost.addFile(file);
-        }
         return dogLost;
     }
 

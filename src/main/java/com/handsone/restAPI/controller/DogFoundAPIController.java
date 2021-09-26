@@ -2,7 +2,7 @@ package com.handsone.restAPI.controller;
 
 import com.handsone.restAPI.domain.DogFound;
 import com.handsone.restAPI.service.DogFoundService;
-import com.handsone.restAPI.global.request.DogDto;
+import com.handsone.restAPI.dto.DogDto;
 import com.handsone.restAPI.global.response.CommonResponse;
 import com.handsone.restAPI.global.response.Response;
 import lombok.RequiredArgsConstructor;
