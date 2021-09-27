@@ -2,60 +2,76 @@ package com.handsone.restAPI.service;
 
 import com.handsone.restAPI.domain.DogFound;
 import com.handsone.restAPI.domain.DogLost;
-import com.handsone.restAPI.domain.File;
-import com.handsone.restAPI.repository.FileRepository;
+import com.handsone.restAPI.domain.ImageFile;
+import com.handsone.restAPI.exception.ClientException;
+import com.handsone.restAPI.repository.ImageFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.handsone.restAPI.domain.File.createFile;
+import static com.handsone.restAPI.domain.ImageFile.createFile;
+import static com.handsone.restAPI.error.ErrorCode.NOTFOUND_FILE;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class FileService {
+public class ImageFileService {
 
-    private final FileRepository fileRepository;
+    private final ImageFileRepository imageFileRepository;
     private final String lostSavePath = System.getProperty("user.dir") + "/lost";
     private final String foundSavePath = System.getProperty("user.dir") + "/found";
 
+    @PostConstruct
+    public void init() {
+        log.debug("ImageFileService::postConstruct DONE");
+        createDir(lostSavePath);
+        createDir(foundSavePath);
+    }
+
     public void lostUpload(DogLost dogLost, List<MultipartFile> files) throws IOException {
+        String savePath = lostSavePath + "/" + dogLost.getId();
+        createDir(savePath);
+
         for (int i = 0; i < files.size(); i++) {
             MultipartFile multiFile = files.get(i);
-            File file = createFile(dogLost, multiFile, Integer.toString(i));
-            String savePath = lostSavePath + "/" + dogLost.getId();
-            String filePath = savePath + "/" + file.getFileName();
+            ImageFile imageFile = createFile(dogLost, multiFile, Integer.toString(i));
+            String filePath = savePath + "/" + imageFile.getFileName();
 
-            createDir(lostSavePath);
-            createDir(savePath);
             multiFile.transferTo(new java.io.File(filePath));
-            file.setFilePath(filePath);
+            imageFile.setFilePath(filePath);
 
-            fileRepository.save(file);
+            imageFileRepository.save(imageFile);
         }
     }
 
     public void foundUpload(DogFound dogFound, List<MultipartFile> files) throws IOException {
+        String savePath = foundSavePath + "/" + dogFound.getId();
+        createDir(savePath);
+
         for (int i = 0; i < files.size(); i++) {
             MultipartFile multiFile = files.get(i);
-            File file = createFile(dogFound, multiFile, Integer.toString(i));
-            String savePath = foundSavePath + "/" + dogFound.getId();
-            String filePath = savePath + "/" + file.getFileName();
+            ImageFile imageFile = createFile(dogFound, multiFile, Integer.toString(i));
+            String filePath = savePath + "/" + imageFile.getFileName();
 
-            createDir(foundSavePath);
-            createDir(savePath);
             multiFile.transferTo(new java.io.File(filePath));
-            file.setFilePath(filePath);
+            imageFile.setFilePath(filePath);
 
-            fileRepository.save(file);
+            imageFileRepository.save(imageFile);
         }
+    }
+
+    public Resource getImage(Long id) {
+        ImageFile imageFile = imageFileRepository.findById(id).orElseThrow(() -> new ClientException("Cannot find File.", NOTFOUND_FILE));
+        return null;
     }
 
     private void createDir(String savePath) {
@@ -67,23 +83,5 @@ public class FileService {
                 Arrays.stream(e.getStackTrace()).forEach(System.out::println);
             }
         }
-    }
-
-    public File getFileById(Long id) {
-        return fileRepository.findById(id).get();
-    }
-
-    public List<File> getAllByDogLost(DogLost dogLost) {
-        return fileRepository.findAllByDogLost(dogLost);
-    }
-    public List<File> getAllByDogLostId(Long dogLostId) {
-        return fileRepository.findAllByDogLostId(dogLostId);
-    }
-
-    public List<File> getAllByDogFound(DogFound dogFound) {
-        return fileRepository.findAllByDogFound(dogFound);
-    }
-    public List<File> getAllByDogFoundId(Long dogFoundId) {
-        return fileRepository.findAllByDogFoundId(dogFoundId);
     }
 }

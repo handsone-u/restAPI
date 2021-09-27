@@ -5,13 +5,12 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity @Getter
 @NoArgsConstructor
-public class File {
+public class ImageFile {
     @Id @GeneratedValue
-    @Column(name = "file_id")
+    @Column(name = "image_file_id")
     private Long id;
 
     private String origFileName;
@@ -19,14 +18,14 @@ public class File {
     private String filePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dogLost_id")
+    @JoinColumn(name = "dog_lost_id")
     private DogLost dogLost;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dogFound_id")
+    @JoinColumn(name = "dog_found_id")
     private DogFound dogFound;
 
-    public File(Long id, String origFileName, String fileName, String filePath) {
+    public ImageFile(Long id, String origFileName, String fileName, String filePath) {
         this.id = id;
         this.origFileName = origFileName;
         this.fileName = fileName;
@@ -36,10 +35,10 @@ public class File {
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
-    public File (DogLost dogLost) {
+    public ImageFile(DogLost dogLost) {
         this.dogLost = dogLost;
     }
-    public File (DogFound dogFound){
+    public ImageFile(DogFound dogFound){
         this.dogFound = dogFound;
     }
 
@@ -48,17 +47,17 @@ public class File {
         this.fileName = fileName + "." + origFileName.split("\\.")[1];
     }
 
-    public static File createFile(DogLost dogLost, MultipartFile multiFile, String fileName) {
-        File file = new File(dogLost);
-        file.setFileNames(multiFile, fileName);
-        dogLost.getFileList().add(file);
-        return file;
+    public static ImageFile createFile(DogLost dogLost, MultipartFile multiFile, String fileName) {
+        ImageFile imageFile = new ImageFile(dogLost);
+        imageFile.setFileNames(multiFile, fileName);
+        dogLost.getImageFileList().add(imageFile);
+        return imageFile;
     }
 
-    public static File createFile(DogFound dogFound, MultipartFile multiFile, String fileName) {
-        File file = new File(dogFound);
-        file.setFileNames(multiFile, fileName);
-        dogFound.getFileList().add(file);
-        return file;
+    public static ImageFile createFile(DogFound dogFound, MultipartFile multiFile, String fileName) {
+        ImageFile imageFile = new ImageFile(dogFound);
+        imageFile.setFileNames(multiFile, fileName);
+        dogFound.getImageFileList().add(imageFile);
+        return imageFile;
     }
 }

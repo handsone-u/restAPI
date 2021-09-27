@@ -1,6 +1,6 @@
 package com.handsone.restAPI.dto;
 
-import com.handsone.restAPI.domain.File;
+import com.handsone.restAPI.domain.ImageFile;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,8 +15,8 @@ public class FileDto {
     private String fileName;
     private String filePath;
 
-    public File toEntity() {
-        return new File(id, origFileName, fileName, filePath);
+    public ImageFile toEntity() {
+        return new ImageFile(id, origFileName, fileName, filePath);
     }
 
     @Builder
