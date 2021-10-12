@@ -15,6 +15,7 @@ public class ImageFile {
 
     private String origFileName;
     private String fileName;
+    private String fileContentType;
     private String filePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,13 +25,6 @@ public class ImageFile {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dog_found_id")
     private DogFound dogFound;
-
-    public ImageFile(Long id, String origFileName, String fileName, String filePath) {
-        this.id = id;
-        this.origFileName = origFileName;
-        this.fileName = fileName;
-        this.filePath = filePath;
-    }
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
@@ -44,7 +38,9 @@ public class ImageFile {
 
     public void setFileNames(MultipartFile multiFile, String fileName) {
         this.origFileName = multiFile.getOriginalFilename();
-        this.fileName = fileName + "." + origFileName.split("\\.")[1];
+        String[] split = origFileName.split("\\.");
+        this.fileName = fileName + "." + split[1];
+        this.fileContentType = multiFile.getContentType();
     }
 
     public static ImageFile createFile(DogLost dogLost, MultipartFile multiFile, String fileName) {
