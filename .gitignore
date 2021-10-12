@@ -18,6 +18,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
+firebase*
 log
 .idea
 *.iws
@@ -25,8 +26,6 @@ log
 *.ipr
 *.img
 image
-lost
-found
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
