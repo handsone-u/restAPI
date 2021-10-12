@@ -3,6 +3,7 @@ package com.handsone.restAPI.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.handsone.restAPI.dto.DogDto;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +19,7 @@ public class DogLost extends Dog {
     private String dogName;
 
     @OneToMany(mappedBy = "dogLost") @JsonIgnore
-    private List<File> fileList = new ArrayList<>();
+    private List<ImageFile> imageFileList = new ArrayList<>();
 
     public DogLost(DogDto dogDto) {
         super(dogDto);

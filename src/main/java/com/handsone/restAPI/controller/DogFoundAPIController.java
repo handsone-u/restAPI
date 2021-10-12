@@ -5,23 +5,50 @@ import com.handsone.restAPI.service.DogFoundService;
 import com.handsone.restAPI.dto.DogDto;
 import com.handsone.restAPI.global.response.CommonResponse;
 import com.handsone.restAPI.global.response.Response;
+import com.handsone.restAPI.service.ImageFileService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/dog-found")
+@Slf4j
 public class DogFoundAPIController {
 
     private final DogFoundService dogFoundService;
+    private final ImageFileService imageFileService;
+    private final ModelMapper modelMapper;
+    private final String downFoundPath = "/download-image-file/found/";
 
-    @PostMapping("dog-found")
-    public ResponseEntity<? extends Response> postDogFound(@ModelAttribute DogDto dogDto,
-                                                           @RequestParam("files")List<MultipartFile> files) throws Exception{
-        DogFound dogFound = dogFoundService.upload(dogDto, files);
-        return ResponseEntity.ok().body(new CommonResponse<Long>(0L));
+    @PostMapping("")
+    public ResponseEntity<? extends Response> postDogFound(
+            @ModelAttribute DogDto dogDto,
+            @RequestParam("files")List<MultipartFile> files) throws Exception{
+        DogFound upload = dogFoundService.upload(dogDto, files);
+        String baseUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(downFoundPath)
+                .path(upload.getId().toString())
+                .toUriString();
+
+        return ResponseEntity.ok()
+                .body(new CommonResponse<DogDto>(modelMapper.map(upload, DogDto.class)
+                        .setMemberProperties().setFileProperties(baseUri)));
     }
+
+    @GetMapping("/{dogId}")
+    public ResponseEntity<? extends Response> getDogFound(@PathVariable Long dogId) {
+        DogFound dogFound = dogFoundService.findById(dogId);
+        return ResponseEntity.ok()
+                .body(new CommonResponse<DogDto>(modelMapper.map(dogFound, DogDto.class)));
+    }
+
+    // TODO: 2021/10/12
+    //  Impl slicing
 }
