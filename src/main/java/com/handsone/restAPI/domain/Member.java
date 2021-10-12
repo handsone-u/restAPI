@@ -23,10 +23,10 @@ public class Member {
     @Embedded @Column(name = "home_address")
     private Address address;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<DogLost> dogLostList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<DogFound> dogFoundList = new ArrayList<>();
 
     public void addDogLost(DogLost dogLost) {

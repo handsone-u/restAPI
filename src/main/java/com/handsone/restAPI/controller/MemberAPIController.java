@@ -7,6 +7,7 @@ import com.handsone.restAPI.global.response.CommonResponse;
 import com.handsone.restAPI.global.response.ErrorResponse;
 import com.handsone.restAPI.global.response.Response;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
+@Slf4j
 public class MemberAPIController {
 
     private final MemberService memberService;
