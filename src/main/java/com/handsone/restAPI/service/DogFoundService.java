@@ -10,7 +10,9 @@ import com.handsone.restAPI.repository.MemberRepository;
 import com.handsone.restAPI.dto.DogDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +56,14 @@ public class DogFoundService {
     public DogFound findById(Long id) {
         return dogFoundRepository.findById(id)
                 .orElseThrow(() -> new ClientException("Cannot find Dog's info.", ErrorCode.NOTFOUND_DOG));
+    }
+
+    public Page<DogFound> findAll(Pageable pageable) {
+        return dogFoundRepository.findAll(pageable);
+    }
+
+    public long count() {
+        return dogFoundRepository.count();
     }
 //
 //    public Slice<DogFound> findAllByBoardStatusNormal(PageRequest pageRequest) {

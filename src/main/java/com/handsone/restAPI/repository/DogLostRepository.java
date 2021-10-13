@@ -14,4 +14,6 @@ public interface DogLostRepository extends JpaRepository<DogLost, Long> {
     public List<DogLost> findAllByMember(Member member);
 
     public Slice<DogLost> findAllByBoardStatus(BoardStatus boardStatus, Pageable pageable);
+
+    public Slice<DogLost> findAllBy(Pageable pageable);
 }

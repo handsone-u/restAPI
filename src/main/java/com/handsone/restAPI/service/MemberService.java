@@ -6,11 +6,11 @@ import com.handsone.restAPI.exception.ClientException;
 import com.handsone.restAPI.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static com.handsone.restAPI.error.ErrorCode.*;
 
@@ -20,7 +20,6 @@ import static com.handsone.restAPI.error.ErrorCode.*;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final ModelMapper modelMapper;
 
     @Transactional(readOnly = false, rollbackFor = {RuntimeException.class, Error.class})
     public Member signUp(MemberDto memberDto) {
@@ -39,8 +38,18 @@ public class MemberService {
                 .orElseThrow(() -> new ClientException("Cannot find Member's info.", NOTFOUND_MEMBER));
     }
 
+    public Page<Member> findAll(Pageable pageable) {
+        return memberRepository.findAll(pageable);
+    }
+
+    public Slice<Member> findAllSlice(Pageable pageable) {
+        return memberRepository.findAllBy(pageable);
+    }
+
     /**
-     * true : userId already Exists.
+     * checking if userId that posted, is duplicated/
+     * @param userId
+     * @return True if duplicated.
      */
     public Boolean checkUserIdDuplicated(String userId) {
         return memberRepository.findByUserId(userId).isPresent();
@@ -48,9 +57,5 @@ public class MemberService {
 
     public Long count() {
         return memberRepository.count();
-    }
-
-    public List<Member> findAll() {
-        return memberRepository.findAll();
     }
 }

@@ -8,6 +8,8 @@ import com.handsone.restAPI.repository.DogLostRepository;
 import com.handsone.restAPI.domain.Member;
 import com.handsone.restAPI.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +36,7 @@ public class DogLostService {
      * @param files : images to be Uploaded.
      * @return Entity of DogLost
      */
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, rollbackFor = {IOException.class, RuntimeException.class})
     public DogLost upload(DogDto dogDto, List<MultipartFile> files) throws IOException {
         Member member = memberRepository.findById(dogDto.getMemberId())
                 .orElseThrow(() -> new ClientException("Cannot find Member's info.", ErrorCode.NOTFOUND_MEMBER));
@@ -49,13 +51,17 @@ public class DogLostService {
                 .orElseThrow(() -> new ClientException("Cannot find Dog's info.", ErrorCode.NOTFOUND_DOG));
     }
 
+    public Long count(){
+        return dogLostRepository.count();
+    }
+
+    public Page<DogLost> findAll(Pageable pageable) {
+        return dogLostRepository.findAll(pageable);
+    }
 //    public Slice<DogLost> findAllByBoardStatusNormal(Pageable pageRequest) {
 //        return dogLostRepository.findAllByBoardStatus(BoardStatus.NORMAL, pageRequest);
 //    }
 //
-//    public Long count(){
-//        return dogLostRepository.count();
-//    }
 //
 //    public List<DogLost> findAll() {
 //        return dogLostRepository.findAll();
