@@ -25,6 +25,9 @@ log
 *.iml
 *.ipr
 *.img
+*.jpg
+*.JPG
+*.png
 image
 out/
 !**/src/main/**/out/
