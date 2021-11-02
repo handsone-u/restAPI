@@ -21,7 +21,7 @@
 ## 업무 분장
 ![image](https://user-images.githubusercontent.com/62103218/139622785-022b66b6-4655-417d-bba4-b4203aba79c9.png)
 
-## DB EER
+## EER
 ![EER](https://user-images.githubusercontent.com/62103218/139622698-781f1d10-3603-4778-97d1-0eb52f9c5a1f.png)
 
 ## 예상 결과물
