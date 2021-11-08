@@ -31,8 +31,7 @@ public class ImageFileAPIController {
 
     @GetMapping("/download-image-file/lost/{dogId}/{fileName}")
     public ResponseEntity<Resource> downloadLost(@PathVariable Long dogId,
-                                                 @PathVariable String fileName,
-                                                 RequestEntity requestEntity) {
+                                                 @PathVariable String fileName) {
 
         Resource resource = imageFileService.loadFileLost(dogId, fileName);
         DogLost dogLost = dogLostService.findById(dogId);
@@ -45,8 +44,7 @@ public class ImageFileAPIController {
 
     @GetMapping("/download-image-file/found/{dogId}/{fileName}")
     public ResponseEntity<Resource> downloadFound(@PathVariable Long dogId,
-                                                 @PathVariable String fileName,
-                                                 RequestEntity requestEntity) {
+                                                 @PathVariable String fileName) {
 
         Resource resource = imageFileService.loadFileFound(dogId, fileName);
         DogFound dogFound = dogFoundService.findById(dogId);
