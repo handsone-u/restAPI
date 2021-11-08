@@ -58,10 +58,11 @@ public class ImageFileService {
     }
 
     public ImageFile findById(Long id) {
-        return imageFileRepository.findById(id).get();
+        return imageFileRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("파일 존재하지 않음."));
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, rollbackFor = {IOException.class, RuntimeException.class})
     public void lostUpload(DogLost dog, List<MultipartFile> files) throws IOException {
         Path savePath = lostSavePath.resolve(dog.getId().toString());
         Files.createDirectories(savePath);
@@ -74,7 +75,7 @@ public class ImageFileService {
         }
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, rollbackFor = {IOException.class, RuntimeException.class, Error.class})
     public void foundUpload(DogFound dog, List<MultipartFile> files) throws IOException {
         Path savePath = foundSavePath.resolve(dog.getId().toString());
         Files.createDirectories(savePath);
