@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableJpaAuditing
+@EnableConfigurationProperties(value = FileUploadProperties.class)
 @SpringBootApplication
 public class RestApiApplication {
 	public static void main(String[] args) {
