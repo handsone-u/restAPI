@@ -5,12 +5,9 @@ import com.handsone.restAPI.domain.*;
 import com.handsone.restAPI.infra.address.Address;
 import lombok.*;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter @Setter
 @Builder
@@ -23,7 +20,7 @@ public class DogDto {
     @JsonIgnore
     private List<ImageFile> imageFileList = new ArrayList<>();
     private final List<Long> fileIds = new ArrayList<>();
-    private final List<String> fileUri = new ArrayList<>();
+    private final List<String> fileUris = new ArrayList<>();
     private String nickName;
     private String dogName;
     private String title;
@@ -32,27 +29,6 @@ public class DogDto {
     private Address address;
     private LocalDateTime regDate;
     private LocalDateTime lastModifiedDate;
-
-    public DogDto(DogLost dogLost) {
-        DogDto dto = DogDto.builder()
-                .id(dogLost.getId())
-                .memberId(dogLost.getMember().getId())
-                .member(dogLost.getMember())
-                .imageFileList(dogLost.getImageFileList())
-                .nickName(dogLost.getMember().getNickName())
-                .dogName(dogLost.getDogName())
-                .title(dogLost.getTitle())
-                .content(dogLost.getContent())
-                .gender(dogLost.getGender())
-                .address(dogLost.getAddress())
-                .regDate(dogLost.getRegDate())
-                .lastModifiedDate(dogLost.getLastModifiedDate())
-                .build();
-        dogLost.getImageFileList().forEach(d ->{
-            fileIds.add(d.getId());
-            fileUri.add(d.getFilePath());
-        });
-    }
 
     public DogDto setMemberProperties() {
         this.memberId = member.getId();
@@ -63,7 +39,7 @@ public class DogDto {
     public DogDto setFileProperties(String uri) {
         imageFileList.forEach((image) -> {
             this.fileIds.add(image.getId());
-            this.fileUri.add(uri + "/" + image.getFileName());});
+            this.fileUris.add(uri + "/" + image.getFileName());});
         return this;
     }
 
