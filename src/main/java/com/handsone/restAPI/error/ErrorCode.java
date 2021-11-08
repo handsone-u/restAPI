@@ -16,6 +16,8 @@ public enum ErrorCode {
     UNAUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "인증에 실패하였습니다."),
     // 404
     NOTFOUND_MEMBER(HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다."),
+    NOTFOUND_DOG(HttpStatus.NOT_FOUND, "해당 게시글을 찾을 수 없습니다."),
+    NOTFOUND_FILE(HttpStatus.NOT_FOUND, "해당 파일을 찾을 수 없습니다,"),
     // 409
     DUPLICATE_RESOURCE(CONFLICT, "중복된 데이터가 존재합니다.");
 
