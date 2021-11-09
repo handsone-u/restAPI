@@ -40,17 +40,14 @@ public class DogFoundService {
      * 2. Save Board(Found), get Board's PK
      * 3. Save Image, with Board's PK
      * @param dogDto : DTO of Board, containing Member's ID.
-     * @param files : images to be Uploaded.
      * @return Entity of DogFound
      */
     @Transactional(readOnly = false)
-    public DogFound upload(DogDto dogDto, List<MultipartFile> files) throws IOException {
+    public DogFound upload(DogDto dogDto) {
         Member member = memberRepository.findById(dogDto.getMemberId())
                 .orElseThrow(() -> new ClientException("Cannot find Member's info.", ErrorCode.NOTFOUND_MEMBER));
-        DogFound dogFound = dogFoundRepository.save(createDogFound(member, dogDto));
-        imageFileService.foundUpload(dogFound, files);
 
-        return dogFound;
+        return dogFoundRepository.save(createDogFound(member, dogDto));
     }
 
     public DogFound findById(Long id) {

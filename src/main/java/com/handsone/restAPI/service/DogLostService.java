@@ -8,6 +8,7 @@ import com.handsone.restAPI.repository.DogLostRepository;
 import com.handsone.restAPI.domain.Member;
 import com.handsone.restAPI.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,29 +22,26 @@ import static com.handsone.restAPI.domain.DogLost.createDogLost;
 
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
+@RequiredArgsConstructor @Slf4j
 public class DogLostService {
 
     private final DogLostRepository dogLostRepository;
     private final MemberRepository memberRepository;
-    private final ImageFileService imageFileService;
 
     /**
      * 1. find Member, from dogDto.memberId
      * 2. Save Board(Lost), get Board's PK
      * 3. Save Image, with Board's PK
+     *
      * @param dogDto : DTO of Board, containing Member's ID.
-     * @param files : images to be Uploaded.
      * @return Entity of DogLost
      */
-    @Transactional(readOnly = false, rollbackFor = {IOException.class, RuntimeException.class})
-    public DogLost upload(DogDto dogDto, List<MultipartFile> files) throws IOException {
+    @Transactional(readOnly = false, rollbackFor = {ClientException.class, RuntimeException.class})
+    public DogLost upload(DogDto dogDto) {
         Member member = memberRepository.findById(dogDto.getMemberId())
                 .orElseThrow(() -> new ClientException("Cannot find Member's info.", ErrorCode.NOTFOUND_MEMBER));
-        DogLost dogLost = dogLostRepository.save(createDogLost(member, dogDto));
-        imageFileService.lostUpload(dogLost, files);
 
-        return dogLost;
+        return dogLostRepository.save(createDogLost(member, dogDto));
     }
 
     public DogLost findById(Long id) {
@@ -58,17 +56,9 @@ public class DogLostService {
     public Page<DogLost> findAll(Pageable pageable) {
         return dogLostRepository.findAll(pageable);
     }
-//    public Slice<DogLost> findAllByBoardStatusNormal(Pageable pageRequest) {
-//        return dogLostRepository.findAllByBoardStatus(BoardStatus.NORMAL, pageRequest);
-//    }
-//
-//
-//    public List<DogLost> findAll() {
-//        return dogLostRepository.findAll();
-//    }
-//
-//    public List<DogLost> findAllByMemberId(Long memberId) {
-//        return dogLostRepository.findAllByMemberId(memberId);
-//    }
+
+    public List<DogLost> findAllByMemberId(Long memberId) {
+        return dogLostRepository.findAllByMemberId(memberId);
+    }
 
 }

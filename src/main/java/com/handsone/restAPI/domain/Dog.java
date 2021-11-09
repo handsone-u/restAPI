@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@NoArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 public abstract class Dog {
 
     @Id @GeneratedValue
@@ -34,26 +34,12 @@ public abstract class Dog {
     @Enumerated(value = EnumType.STRING)
     protected Gender gender;
 
+    private String dogBreed;
+
     @CreatedDate
     @Column(updatable = false)
     protected LocalDateTime regDate;
 
     @LastModifiedDate
     protected LocalDateTime lastModifiedDate;
-
-    public Dog(Long id, Member member, String content, Address address, BoardStatus boardStatus, Gender gender) {
-        this.id = id;
-        this.member = member;
-        this.content = content;
-        this.address = address;
-        this.boardStatus = BoardStatus.NORMAL;
-        this.gender = gender;
-    }
-
-    public Dog(DogDto dogDto) {
-        this.content = dogDto.getContent();
-        this.address = dogDto.getAddress();
-        this.boardStatus = BoardStatus.NORMAL;
-        this.gender = dogDto.getGender();
-    }
 }

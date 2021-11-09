@@ -14,21 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Builder
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DogFound extends Dog {
 
-    @OneToMany(mappedBy = "dogFound") @JsonIgnore
+    @OneToMany(mappedBy = "dogFound")
     private List<ImageFile> imageFileList = new ArrayList<>();
 
     public DogFound(Long id, Member member, String content, Address address, BoardStatus boardStatus, Gender gender,
                     String dogBreed, LocalDateTime regDate, LocalDateTime lastModifiedDate,
                     List<ImageFile> imageFileList) {
         super(id, member, content, address, boardStatus, gender, dogBreed, regDate, lastModifiedDate);
-        this.imageFileList = imageFileList;
-    }
-
-    public DogFound(List<ImageFile> imageFileList) {
         this.imageFileList = imageFileList;
     }
 

@@ -3,6 +3,7 @@ package com.handsone.restAPI.service;
 import com.handsone.restAPI.domain.DogFound;
 import com.handsone.restAPI.domain.DogLost;
 import com.handsone.restAPI.domain.ImageFile;
+import com.handsone.restAPI.error.ErrorCode;
 import com.handsone.restAPI.exception.FileDownloadException;
 import com.handsone.restAPI.property.FileUploadProperties;
 import com.handsone.restAPI.repository.ImageFileRepository;
@@ -24,6 +25,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import static com.handsone.restAPI.domain.ImageFile.createFile;
+import static com.handsone.restAPI.error.ErrorCode.FILE_READ_ERROR;
 
 @Slf4j
 @Service
@@ -94,9 +96,9 @@ public class ImageFileService {
                     .resolve(fileName).normalize();
             UrlResource resource = new UrlResource(filePath.toUri());
             if(resource.exists()) return resource;
-            else throw new FileDownloadException("Cannot find file.");
+            else throw new FileDownloadException("Cannot find file.", FILE_READ_ERROR);
         } catch (MalformedURLException e) {
-            throw new FileDownloadException("Cannot find file.", e);
+            throw new FileDownloadException("Cannot find file.", FILE_READ_ERROR);
         }
     }
 
@@ -107,9 +109,9 @@ public class ImageFileService {
                     .resolve(fileName).normalize();
             UrlResource resource = new UrlResource(filePath.toUri());
             if(resource.exists()) return resource;
-            else throw new FileDownloadException("Cannot find file.");
+            else throw new FileDownloadException("Cannot find file.", FILE_READ_ERROR);
         } catch (MalformedURLException e) {
-            throw new FileDownloadException("Cannot find file.", e);
+            throw new FileDownloadException("Cannot find file.", FILE_READ_ERROR);
         }
     }
 
