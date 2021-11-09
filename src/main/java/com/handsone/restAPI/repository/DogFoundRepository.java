@@ -11,7 +11,10 @@ import java.util.List;
 
 public interface DogFoundRepository extends JpaRepository<DogFound, Long> {
     public List<DogFound> findAllByMemberId(Long memberId);
+
     public List<DogFound> findAllByMember(Member member);
+
+    public List<DogFound> findAllByDogBreed(String dogBreed);
 
     public Slice<DogFound> findAllByBoardStatus(BoardStatus boardStatus, Pageable pageable);
 
