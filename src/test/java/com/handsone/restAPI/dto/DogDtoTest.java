@@ -1,5 +1,6 @@
 package com.handsone.restAPI.dto;
 
+import com.handsone.restAPI.config.AppConfig;
 import com.handsone.restAPI.domain.*;
 import com.handsone.restAPI.infra.address.Address;
 import org.assertj.core.api.Assertions;
@@ -8,15 +9,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = AppConfig.class)
 class DogDtoTest {
+    @Autowired
+    ModelMapper modelMapper;
+
     static ArrayList<DogDto> dogDTOs = new ArrayList<>();
 
     @BeforeAll
@@ -68,6 +76,30 @@ class DogDtoTest {
             assertThat(dogDTO.getAddress().getGu()).isEqualTo(dogFound.getAddress().getGu());
             assertThat(dogDTO.getRegDate()).isEqualTo(dogFound.getRegDate());
             assertThat(dogDTO.getLastModifiedDate()).isEqualTo(dogFound.getLastModifiedDate());
+        }
+    }
+
+    @Test
+    public void convertEntityToDTO() {
+        for (DogDto dogDTO : dogDTOs) {
+            DogLost dogLost = dogDTO.toEntityLost();
+
+            DogDto dto = modelMapper.map(dogLost, DogDto.class);
+            assertThat(dto).isNotNull();
+            dto.setMemberProperties();
+
+            assertThat(dto.getId()).isEqualTo(dogLost.getId());
+            assertThat(dto.getMember()).isEqualTo(dogLost.getMember());
+            assertThat(dto.getImageFileList()).isEqualTo(dogLost.getImageFileList());
+            assertThat(dto.getNickName()).isEqualTo(dogLost.getMember().getNickName());
+            assertThat(dto.getDogName()).isEqualTo(dogLost.getDogName());
+            assertThat(dto.getTitle()).isEqualTo(dogLost.getTitle());
+            assertThat(dto.getContent()).isEqualTo(dogLost.getContent());
+            assertThat(dto.getGender()).isEqualTo(dogLost.getGender());
+            assertThat(dto.getDogBreed()).isEqualTo(dogLost.getDogBreed());
+            assertThat(dto.getAddress().getGu()).isEqualTo(dogLost.getAddress().getGu());
+            assertThat(dto.getRegDate()).isEqualTo(dogLost.getRegDate());
+            assertThat(dto.getLastModifiedDate()).isEqualTo(dogLost.getLastModifiedDate());
         }
     }
 }
