@@ -1,12 +1,15 @@
 package com.handsone.restAPI.exception;
 
 
-public class FileUploadException extends RuntimeException{
-    public FileUploadException(String message) {
-        super(message);
-    }
+import com.handsone.restAPI.error.ErrorCode;
+import lombok.Getter;
 
-    public FileUploadException(String message, Throwable cause) {
-        super(message, cause);
+@Getter
+public class FileUploadException extends RuntimeException{
+    private ErrorCode errorCode;
+
+    public FileUploadException(String message, ErrorCode errorCode) {
+        super(message);
+        this.errorCode = errorCode;
     }
 }

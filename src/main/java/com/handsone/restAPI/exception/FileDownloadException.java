@@ -1,11 +1,14 @@
 package com.handsone.restAPI.exception;
 
-public class FileDownloadException extends RuntimeException {
-    public FileDownloadException(String message) {
-        super(message);
-    }
+import com.handsone.restAPI.error.ErrorCode;
+import lombok.Getter;
 
-    public FileDownloadException(String message, Throwable cause) {
-        super(message, cause);
+@Getter
+public class FileDownloadException extends RuntimeException {
+    private ErrorCode errorCode;
+
+    public FileDownloadException(String message, ErrorCode errorCode) {
+        super(message);
+        this.errorCode = errorCode;
     }
 }
