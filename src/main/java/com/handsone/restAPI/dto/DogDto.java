@@ -26,10 +26,21 @@ public class DogDto {
     private String title;
     private String content;
     private Gender gender;
+    private String dogBreed;
     private Address address;
     private LocalDateTime regDate;
     private LocalDateTime lastModifiedDate;
 
+    public DogLost toEntityLost() {
+        return new DogLost(id, member, content, address, BoardStatus.NORMAL, gender, dogBreed, regDate,
+                lastModifiedDate, title, dogName, imageFileList);
+    }
+
+    public DogFound toEntityFound() {
+        return new DogFound(id, member, content, address, BoardStatus.NORMAL, gender, dogBreed, regDate,
+                lastModifiedDate, imageFileList);
+    }
+    
     public DogDto setMemberProperties() {
         this.memberId = member.getId();
         this.nickName = member.getNickName();
