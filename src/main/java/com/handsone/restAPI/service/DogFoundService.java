@@ -33,7 +33,6 @@ public class DogFoundService {
 
     private final DogFoundRepository dogFoundRepository;
     private final MemberRepository memberRepository;
-    private final ImageFileService imageFileService;
 
     /**
      * 1. find Member, from dogDto.memberId
