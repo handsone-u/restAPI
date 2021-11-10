@@ -53,6 +53,10 @@ public class DogLostService {
         return dogLostRepository.count();
     }
 
+    public List<DogLost> findAllByDogBreed(String dogBreed) {
+        return dogLostRepository.findAllByDogBreed(dogBreed);
+    }
+
     public Page<DogLost> findAll(Pageable pageable) {
         return dogLostRepository.findAll(pageable);
     }
