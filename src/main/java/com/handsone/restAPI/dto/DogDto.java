@@ -5,6 +5,7 @@ import com.handsone.restAPI.domain.*;
 import com.handsone.restAPI.infra.address.Address;
 import lombok.*;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,17 +42,15 @@ public class DogDto {
                 lastModifiedDate, imageFileList);
     }
     
-    public DogDto setMemberProperties() {
+    public void setMemberProperties() {
         this.memberId = member.getId();
         this.nickName = member.getNickName();
-        return this;
     }
 
-    public DogDto setFileProperties(String uri) {
+    public void setFileProperties(String uri) {
         imageFileList.forEach((image) -> {
             this.fileIds.add(image.getId());
-            this.fileUris.add(uri + "/" + image.getFileName());});
-        return this;
+            this.fileUris.add(uri + File.separator + image.getFileName());});
     }
 
     public DogDto setMemberAndFileProperties(String uri) {
