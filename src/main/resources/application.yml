@@ -1,28 +1,10 @@
 spring:
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/jpashop
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+  profiles:
+    active: dev
 
-  servlet:
-    multipart:
-      file-size-threshold: 1MB
-      max-file-size: 15MB
-      max-request-size: 50MB
-      enabled: true
-
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-#        show_sql: true
-        format_sql: true
-        default_batch_fetch_size: 100
 logging:
-  file:
-    name: ./log/test.log
+#  file:
+#    name: ./log/test.log
   level:
     sql: info
     com:
@@ -30,14 +12,11 @@ logging:
         restAPI:
           handler: debug
     root: info
-  logback:
-    rollingpolicy:
-      max-history: 30
-      max-file-size: 50MB
+#  logback:
+#    rollingpolicy:
+#      max-history: 30
+#      max-file-size: 50MB
 #    org.hibernate.SQL: trace
 #  org.hibernate.type: trace
 file:
   upload-dir: ./image
-
-
-
