@@ -1,27 +1,24 @@
 package com.handsone.restAPI.service;
 
 import com.handsone.restAPI.domain.Member;
-import com.handsone.restAPI.dto.MemberDto;
-import com.handsone.restAPI.error.ErrorCode;
 import com.handsone.restAPI.exception.ClientException;
 import com.handsone.restAPI.infra.address.Address;
 import com.handsone.restAPI.repository.MemberRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.handsone.restAPI.error.ErrorCode.DUPLICATE_RESOURCE;
-import static com.handsone.restAPI.error.ErrorCode.NOTFOUND_MEMBER;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
