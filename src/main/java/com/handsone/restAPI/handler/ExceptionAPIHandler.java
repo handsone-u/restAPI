@@ -14,26 +14,23 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class ExceptionAPIHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = {ClientException.class})
+    @ExceptionHandler()
     protected ResponseEntity<ErrorResponse> clientErrorHandle(ClientException e) {
-        log.debug(e.getErrorCode().getDetail());
-        log.debug(e.getMessage());
+        log.debug("Detail=[{}], Message=[{}]",e.getErrorCode().getDetail(), e.getMessage());
 
         return ErrorResponse.toResponseEntity(e.getErrorCode());
     }
 
-    @ExceptionHandler(value = {FileDownloadException.class})
+    @ExceptionHandler()
     protected ResponseEntity<ErrorResponse> fileDownLoadError(FileDownloadException e) {
-        log.error(e.getErrorCode().getDetail());
-        log.error(e.getMessage());
+        log.debug("Detail=[{}], Message=[{}]",e.getErrorCode().getDetail(), e.getMessage());
 
         return ErrorResponse.toResponseEntity(e.getErrorCode());
     }
 
-    @ExceptionHandler(value = {FileUploadException.class})
+    @ExceptionHandler()
     protected ResponseEntity<ErrorResponse> fileUploadError(FileUploadException e) {
-        log.error(e.getErrorCode().getDetail());
-        log.error(e.getMessage());
+        log.error("FILE ERROR", e);
 
         return ErrorResponse.toResponseEntity(e.getErrorCode());
     }
