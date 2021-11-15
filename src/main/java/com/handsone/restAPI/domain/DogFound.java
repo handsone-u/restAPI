@@ -1,10 +1,7 @@
 package com.handsone.restAPI.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.handsone.restAPI.dto.DogDto;
 import com.handsone.restAPI.infra.address.Address;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,10 +25,9 @@ public class DogFound extends Dog {
         this.imageFileList = imageFileList;
     }
 
-    public static DogFound createDogFound(Member member, DogDto dogDto) {
-        DogFound dogFound = dogDto.toEntityFound();
-        dogFound.setMember(member);
-        member.addDogFound(dogFound);
-        return dogFound;
+    public DogFound createDogFound(Member member) {
+        this.setMember(member);
+        member.addDogFound(this);
+        return this;
     }
 }

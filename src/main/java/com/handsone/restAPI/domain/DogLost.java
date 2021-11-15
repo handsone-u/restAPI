@@ -1,11 +1,12 @@
 package com.handsone.restAPI.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.handsone.restAPI.dto.DogDto;
 import com.handsone.restAPI.infra.address.Address;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +31,9 @@ public class DogLost extends Dog {
         this.imageFileList = imageFileList;
     }
 
-    public static DogLost createDogLost(Member member, DogDto dogDto) {
-        DogLost dogLost = dogDto.toEntityLost();
-        dogLost.setMember(member);
-        member.addDogLost(dogLost);
-        return dogLost;
+    public DogLost createDogLost(Member member) {
+        this.setMember(member);
+        member.addDogLost(this);
+        return this;
     }
 }
