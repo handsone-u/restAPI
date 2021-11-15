@@ -1,7 +1,6 @@
 package com.handsone.restAPI.service;
 
 import com.handsone.restAPI.domain.Member;
-import com.handsone.restAPI.dto.MemberDto;
 import com.handsone.restAPI.exception.ClientException;
 import com.handsone.restAPI.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.handsone.restAPI.error.ErrorCode.*;
+import static com.handsone.restAPI.error.ErrorCode.DUPLICATE_RESOURCE;
+import static com.handsone.restAPI.error.ErrorCode.NOTFOUND_MEMBER;
 
 @Service @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -22,13 +22,13 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = false, rollbackFor = {RuntimeException.class, Error.class})
-    public Member signUp(MemberDto memberDto) {
-        memberRepository.findByUserId(memberDto.getUserId()).ifPresent(m -> {
-            throw new ClientException("Member's userId already exists. USERID : " + memberDto.getUserId(), DUPLICATE_RESOURCE);});
-        return memberRepository.save(memberDto.toEntity());
+    public Member signUp(Member member) {
+        memberRepository.findByUserId(member.getUserId()).ifPresent(m -> {
+            throw new ClientException("Member's userId already exists. USERID : " + member.getUserId(), DUPLICATE_RESOURCE);});
+        return memberRepository.save(member);
     }
     
-    public Member logIn(String userId, String password) throws ClientException {
+    public Member logIn(String userId, String password) {
         return memberRepository.findByUserIdAndPassword(userId, password)
                 .orElseThrow(() -> new ClientException("Cannot find Member's info.", NOTFOUND_MEMBER));
     }
@@ -45,12 +45,7 @@ public class MemberService {
     public Slice<Member> findAllSlice(Pageable pageable) {
         return memberRepository.findAllBy(pageable);
     }
-
-    /**
-     * checking if userId that posted, is duplicated/
-     * @param userId
-     * @return True if duplicated.
-     */
+    
     public Boolean checkUserIdDuplicated(String userId) {
         return memberRepository.findByUserId(userId).isPresent();
     }

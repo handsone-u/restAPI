@@ -32,8 +32,9 @@ public class MemberAPIController {
 
     @PostMapping("")
     public ResponseEntity<? extends Response> signUp(@RequestBody MemberDto memberDto) {
+        Member member = memberDto.toEntity();
         return ResponseEntity.ok(new CommonResponse<>
-                (memberService.signUp(memberDto).getId()));
+                (memberService.signUp(member).getId()));
     }
 
     @PostMapping("/login")
@@ -50,14 +51,14 @@ public class MemberAPIController {
 
     @GetMapping("/members")
     public Page<MemberDto> getAllMembers(
-            @PageableDefault(size = 10, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Member> all = memberService.findAll(pageable);
         return all.map(m -> modelMapper.map(m, MemberDto.class));
     }
 
     @GetMapping("/members-slice")
     public Slice<MemberDto> getAllMembersSlice(
-            @PageableDefault(size = 10, page = 0, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Slice<Member> all = memberService.findAllSlice(pageable);
         return all.map(m -> modelMapper.map(m, MemberDto.class));
     }
