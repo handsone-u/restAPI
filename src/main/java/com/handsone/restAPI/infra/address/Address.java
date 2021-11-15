@@ -6,8 +6,10 @@ import javax.persistence.Embeddable;
 
 @Embeddable @Getter @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Address {
     private String gu;
-    private String dong;
+
+    public Address(String gu) {
+        this.gu = gu;
+    }
 }
