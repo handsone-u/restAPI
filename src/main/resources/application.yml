@@ -2,21 +2,12 @@ spring:
   profiles:
     active: dev
 
-logging:
-#  file:
-#    name: ./log/test.log
-  level:
-    sql: info
-    com:
-      handsone:
-        restAPI:
-          handler: debug
-    root: info
+file:
+  upload-dir: ./image
+
 #  logback:
 #    rollingpolicy:
 #      max-history: 30
 #      max-file-size: 50MB
 #    org.hibernate.SQL: trace
 #  org.hibernate.type: trace
-file:
-  upload-dir: ./image
