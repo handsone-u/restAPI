@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -21,9 +22,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 // 각각의 TEST 는 자동으로 Roll Back 됨.
 @DataJpaTest
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
+@ActiveProfiles(profiles = "dev")
 class MemberRepositoryTest {
     @Autowired MemberRepository memberRepository;
-    @Autowired TestEntityManager entityManager;
     static List<Member> members = new ArrayList<>();
 
     @BeforeAll
