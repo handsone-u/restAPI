@@ -10,7 +10,6 @@ import lombok.*;
 public class MemberDto {
     private Long id;
     private String userId;
-    @JsonIgnore
     private String password;
     private String nickName;
     private Address address;

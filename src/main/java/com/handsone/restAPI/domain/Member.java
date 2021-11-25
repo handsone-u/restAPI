@@ -1,6 +1,5 @@
 package com.handsone.restAPI.domain;
 
-import com.handsone.restAPI.dto.MemberDto;
 import com.handsone.restAPI.infra.address.Address;
 import lombok.*;
 
@@ -9,14 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity @Getter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
 public class Member {
 
     @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
 
-    @Column(updatable = false)
     private String userId;
     private String password;
     private String nickName;

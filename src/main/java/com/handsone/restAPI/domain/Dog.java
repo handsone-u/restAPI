@@ -1,6 +1,5 @@
 package com.handsone.restAPI.domain;
 
-import com.handsone.restAPI.dto.DogDto;
 import com.handsone.restAPI.infra.address.Address;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -34,7 +33,7 @@ public abstract class Dog {
     @Enumerated(value = EnumType.STRING)
     protected Gender gender;
 
-    private String dogBreed;
+    protected String dogBreed;
 
     @CreatedDate
     @Column(updatable = false)
