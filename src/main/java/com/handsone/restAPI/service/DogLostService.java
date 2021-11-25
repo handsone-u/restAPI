@@ -1,5 +1,6 @@
 package com.handsone.restAPI.service;
 
+import com.handsone.restAPI.domain.BoardStatus;
 import com.handsone.restAPI.dto.DogDto;
 import com.handsone.restAPI.domain.DogLost;
 import com.handsone.restAPI.error.ErrorCode;
@@ -13,12 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 
-import static com.handsone.restAPI.domain.DogLost.createDogLost;
 
 @Service
 @Transactional(readOnly = true)
@@ -41,7 +38,15 @@ public class DogLostService {
         Member member = memberRepository.findById(dogDto.getMemberId())
                 .orElseThrow(() -> new ClientException("Cannot find Member's info.", ErrorCode.NOTFOUND_MEMBER));
 
-        return dogLostRepository.save(createDogLost(member, dogDto));
+        DogLost dogLost = dogDto.toEntityLost().createDogLost(member);
+        return dogLostRepository.save(dogLost);
+    }
+
+    @Transactional(readOnly = false)
+    public DogLost update(Long id, String dogBreed) {
+        DogLost dogLost = dogLostRepository.findById(id).orElseThrow(() -> new ClientException(ErrorCode.NOTFOUND_DOG));
+        dogLost.setDogBreed(dogBreed);
+        return dogLost;
     }
 
     public DogLost findById(Long id) {
@@ -63,6 +68,10 @@ public class DogLostService {
 
     public List<DogLost> findAllByMemberId(Long memberId) {
         return dogLostRepository.findAllByMemberId(memberId);
+    }
+
+    public Page<DogLost> findAllByStatus(BoardStatus status, Pageable pageable) {
+        return dogLostRepository.findAllByBoardStatus(status, pageable);
     }
 
 }
