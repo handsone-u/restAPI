@@ -6,9 +6,11 @@
 본 프로젝트는 분실 반려견을 찾아주기 위한 Android 어플리케이션 및 서버 구축, </br>
 반려견의 사진을 통해 반려견을 주인에게 찾아주는 것을 목적으로 함
 
+## Tools
+<img width="360" alt="tool png" src="https://user-images.githubusercontent.com/62103218/143264841-606d883b-a47f-43eb-923e-1f6305dff102.png">
 
 ## 전체 구성도
-<img width="630" alt="image" src="https://user-images.githubusercontent.com/62103218/139622839-5a687f0c-58ff-4a66-95c8-83fc1a1f31cb.png">
+<img width="600" alt="image" src="https://user-images.githubusercontent.com/62103218/139622839-5a687f0c-58ff-4a66-95c8-83fc1a1f31cb.png">
 
 ## 주요 기능
 - 로그인 및 회원가입: 신고자 파악을 위한 회원가입 및 로그인</br>
