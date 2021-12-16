@@ -3,7 +3,6 @@ package com.handsone.restAPI.service;
 import com.handsone.restAPI.domain.DogFound;
 import com.handsone.restAPI.domain.DogLost;
 import com.handsone.restAPI.domain.ImageFile;
-import com.handsone.restAPI.error.ErrorCode;
 import com.handsone.restAPI.exception.FileDownloadException;
 import com.handsone.restAPI.property.FileUploadProperties;
 import com.handsone.restAPI.repository.ImageFileRepository;
@@ -41,7 +40,7 @@ public class ImageFileService {
 
     @PostConstruct
     public void init() throws IOException {
-        log.info("ImageFileService::postConstruct INIT. *MUST PASS!*");
+        log.info("*MUST PASS!* ImageFileService::postConstruct INIT.");
         this.fileLocation = Paths.get(fileUploadProperties.getUploadDir()).toAbsolutePath().normalize();
         log.debug(fileLocation.toUri().toURL().toString());
         log.debug(fileLocation.toUri().toString());
@@ -49,14 +48,17 @@ public class ImageFileService {
         this.lostSavePath = this.fileLocation.resolve("lost");
         this.foundSavePath = this.fileLocation.resolve("found");
         try {
-            Files.createDirectories(this.lostSavePath);
-            Files.createDirectories(this.foundSavePath);
-        } catch (IOException e) {
-            log.error("ImageFileService:: ERROR in postConstructor");
+            if (!Files.exists(this.lostSavePath))
+                Files.createDirectories(this.lostSavePath);
+            if (!Files.exists(this.foundSavePath))
+                Files.createDirectories(this.foundSavePath);
+        }
+        catch (IOException e) {
+            log.error("*FAIL* ImageFileService:: ERROR in postConstructor");
             log.error("Need to create Directories again.");
             throw new FileUploadException("Couldn't create directory.", e);
         }
-        log.info("ImageFileService::postConstruct DONE. *SUCCESS!*");
+        log.info("*SUCCESS!* ImageFileService::postConstruct DONE.");
     }
 
     public ImageFile findById(Long id) {
@@ -72,7 +74,7 @@ public class ImageFileService {
         for (int i = 0; i < files.size(); i++) {
             MultipartFile multiFile = files.get(i);
             ImageFile imageFile = createFile(dog, multiFile, Integer.toString(i));
-            setPath(savePath, multiFile, imageFile);
+            setPathAndSaveFile(savePath, multiFile, imageFile);
             imageFileRepository.save(imageFile);
         }
     }
@@ -85,7 +87,7 @@ public class ImageFileService {
         for (int i = 0; i < files.size(); i++) {
             MultipartFile multiFile = files.get(i);
             ImageFile imageFile = createFile(dog, multiFile, Integer.toString(i));
-            setPath(savePath, multiFile, imageFile);
+            setPathAndSaveFile(savePath, multiFile, imageFile);
             imageFileRepository.save(imageFile);
         }
     }
@@ -115,7 +117,7 @@ public class ImageFileService {
         }
     }
 
-    private void setPath(Path savePath, MultipartFile multiFile, ImageFile imageFile) throws IOException {
+    private void setPathAndSaveFile(Path savePath, MultipartFile multiFile, ImageFile imageFile) throws IOException {
         Path filePath = savePath.resolve(imageFile.getFileName());
 
         multiFile.transferTo(filePath);

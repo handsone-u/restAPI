@@ -1,6 +1,7 @@
 package com.handsone.restAPI.controller;
 
 import com.handsone.restAPI.domain.DogFound;
+import com.handsone.restAPI.domain.DogLost;
 import com.handsone.restAPI.dto.RequestAI;
 import com.handsone.restAPI.property.AiModelWebProperties;
 import com.handsone.restAPI.service.DogFoundService;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 @Component @Slf4j
 @RequiredArgsConstructor
@@ -31,7 +34,7 @@ public class AiModelClient {
                 .build();
     }
 
-    public void getDogLostAndUpdateDogBreed(RequestAI requestAI, DogFound dogFound) {
+    public void getDogLostAndUpdateDogBreed(RequestAI requestAI) {
         log.debug("DogId=[{}]", requestAI.getDogId());
         log.debug("FileUri=[{}]", requestAI.getFileUri());
 
@@ -49,8 +52,15 @@ public class AiModelClient {
                     //그리고 DogLost에 등록된 dogBreed들을 찾아서 결과를 뿌림
                     // *DogFound 현재 MANAGED 상태
                     log.debug("createdDogBreed's EstimatedResult=[{}]", r.getDogBreed());
-                    dogFound.setDogBreed(r.getDogBreed());
-                    dogFoundService.update(dogFound);
+                    DogFound update = dogFoundService.update(requestAI.getDogId(), r.getDogBreed());
+                    log.debug("Result=[{}]", update.getDogBreed());
+
+                    log.info("FOUND! pk=[{}], dogBreed=[{}]", update.getId(), update.getDogBreed());
+                    log.info("RedirectUrl=[/dog-found/{}]", update.getId());
+                    List<DogLost> result = dogLostService.findAllByDogBreed(update.getDogBreed());
+                    for (DogLost dogLost : result) {
+                        log.info("LOST pk=[{}]", dogLost.getId());
+                    }
                 });
     }
 
@@ -70,6 +80,8 @@ public class AiModelClient {
                 .subscribe(r -> {
                     //DogLost 등록시 기존 DB 에 있는 dogFound의 dogBreed를 찾아서 결과를 뿌림.
                     log.debug("DogLost.dogBreed=[{}]", r.getDogBreed());
+                    DogLost update = dogLostService.update(requestAI.getDogId(), r.getDogBreed());
+                    log.debug("Result=[{}]", update.getDogBreed());
                 });
     }
 }

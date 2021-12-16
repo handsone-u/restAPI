@@ -3,6 +3,7 @@ package com.handsone.restAPI.repository;
 import com.handsone.restAPI.domain.BoardStatus;
 import com.handsone.restAPI.domain.DogLost;
 import com.handsone.restAPI.domain.Member;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,7 @@ public interface DogLostRepository extends JpaRepository<DogLost, Long> {
 
     public List<DogLost> findAllByDogBreed(String dogBreed);
 
-    public Slice<DogLost> findAllByBoardStatus(BoardStatus boardStatus, Pageable pageable);
+    public Page<DogLost> findAllByBoardStatus(BoardStatus boardStatus, Pageable pageable);
 
     public Slice<DogLost> findAllBy(Pageable pageable);
 }
